@@ -7,6 +7,19 @@ const PATH = "saeulen.json";
 let saeulenData = [];
 let editingId = null;
 
+// Magic-Link-Empfänger für ?token=... oder #token=...
+(function checkMagicLink() {
+  const hash = window.location.hash;
+  if (hash.startsWith("#token=")) {
+    const token = decodeURIComponent(hash.replace("#token=", "")).trim();
+    if (token) {
+      localStorage.setItem("gh_lade_token", token);
+      history.replaceState(null, "", window.location.pathname);
+      alert("Einrichtung abgeschlossen! Token wurde gespeichert.");
+    }
+  }
+})();
+
 function getToken() {
   let token = localStorage.getItem("gh_lade_token");
   if (!token) {
