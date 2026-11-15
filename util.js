@@ -233,6 +233,8 @@ function renderList() {
   }
 
   saeulenData.forEach((item) => {
+    // Hier wird jetzt "DC (Schnell)" bzw. "AC (Langsam)" angezeigt
+    const badgeText = item.type === "DC" ? "DC (Schnell)" : "AC (Langsam)";
     const badgeClass = item.type === "DC" ? "badge-dc" : "badge-ac";
     const imgHtml = item.img
       ? `<img class="saeule-img" src="${item.img}" alt="${item.name}">`
@@ -243,7 +245,7 @@ function renderList() {
       <details>
         <summary>
           <span>${item.name}</span>
-          <span class="badge ${badgeClass}">${item.type}</span>
+          <span class="badge ${badgeClass}">${badgeText}</span>
         </summary>
         ${imgHtml}
         ${descHtml}
