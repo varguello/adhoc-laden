@@ -46,14 +46,14 @@
       <label>Foto der Säule (optional / neu)</label>
       <input type="file" id="inp-img" accept="image/*" />
 
-      <button
-        id="btn-submit"
-        class="btn-primary"
-        style="margin-top: 16px"
-        onclick="handleSave()"
-      >
-        Speichern
-      </button>
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="cancelForm()">
+          Abbrechen
+        </button>
+        <button id="btn-submit" class="btn-primary" onclick="handleSave()">
+          Speichern
+        </button>
+      </div>
     </div>
 
     <div id="status">Lade Daten...</div>

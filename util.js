@@ -55,6 +55,11 @@ function toggleForm() {
   }
 }
 
+function cancelForm() {
+  resetForm();
+  document.getElementById("form-box").style.display = "none";
+}
+
 function resetForm() {
   editingId = null;
   document.getElementById("form-title").textContent = "Neue Säule / Anschluss";
@@ -235,20 +240,20 @@ function renderList() {
     const descHtml = item.desc ? `<div class="desc">${item.desc}</div>` : "";
 
     container.innerHTML += `
-     <details>
-       <summary>
-         <span>${item.name}</span>
-         <span class="badge ${badgeClass}">${item.type}</span>
-       </summary>
-       ${imgHtml}
-       ${descHtml}
-       <a class="start-link" href="${item.url}" target="_blank">⚡ Ladevorgang starten</a>
-       <div class="btn-actions">
-         <button class="btn-edit" onclick="editSaeule(${item.id})">✏️ Bearbeiten</button>
-         <button class="btn-del" onclick="deleteSaeule(${item.id})">🗑️ Löschen</button>
-       </div>
-     </details>
-   `;
+      <details>
+        <summary>
+          <span>${item.name}</span>
+          <span class="badge ${badgeClass}">${item.type}</span>
+        </summary>
+        ${imgHtml}
+        ${descHtml}
+        <a class="start-link" href="${item.url}" target="_blank">⚡ Ladevorgang starten</a>
+        <div class="btn-actions">
+          <button class="btn-edit" onclick="editSaeule(${item.id})">✏️ Bearbeiten</button>
+          <button class="btn-del" onclick="deleteSaeule(${item.id})">🗑️ Löschen</button>
+        </div>
+      </details>
+    `;
   });
 }
 

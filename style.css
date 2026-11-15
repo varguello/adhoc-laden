@@ -43,7 +43,14 @@ button:active {
 .btn-primary {
     background: var(--accent);
     color: #fff;
-    width: 100%;
+    flex: 1;
+}
+
+.btn-cancel {
+    background: #2c2c2e;
+    color: var(--text);
+    border: 1px solid var(--border);
+    flex: 1;
 }
 
 .btn-toggle {
@@ -52,6 +59,12 @@ button:active {
     border: 1px solid var(--border);
     padding: 8px 12px;
     font-size: 0.85rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
 }
 
 .btn-actions {
@@ -181,4 +194,3 @@ summary::-webkit-details-marker {
     text-align: center;
     margin: 10px 0;
 }
-
