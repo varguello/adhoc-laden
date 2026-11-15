@@ -54,13 +54,28 @@
         padding: 8px 12px;
         font-size: 0.85rem;
       }
+      .btn-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .btn-edit {
+        background: transparent;
+        color: var(--accent);
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        flex: 1;
+      }
       .btn-del {
         background: transparent;
         color: var(--danger);
         font-size: 0.8rem;
         padding: 6px 10px;
         border: 1px solid var(--danger);
-        margin-top: 10px;
+        border-radius: 6px;
+        flex: 1;
       }
 
       /* Formular-Box */
@@ -173,7 +188,7 @@
 
     <!-- Eingabeformular -->
     <div id="form-box">
-      <h3 style="margin-top: 0">Neue Säule / Anschluss</h3>
+      <h3 id="form-title" style="margin-top: 0">Neue Säule / Anschluss</h3>
       <label>Standort & Name (z. B. Edeka Säule 1)</label>
       <input type="text" id="inp-name" placeholder="Edeka – Säule 1" />
 
@@ -193,13 +208,14 @@
         placeholder="Rechter Stellplatz, Buchse links"
       />
 
-      <label>Foto der Säule (optional)</label>
+      <label>Foto der Säule (optional / neu)</label>
       <input type="file" id="inp-img" accept="image/*" />
 
       <button
+        id="btn-submit"
         class="btn-primary"
         style="margin-top: 16px"
-        onclick="addSaeule()"
+        onclick="handleSave()"
       >
         Speichern
       </button>
@@ -216,8 +232,8 @@
       // =====================
 
       let saeulenData = [];
+      let editingId = null; // null = neu anlegen, ansonsten ID der zu bearbeitenden Säule
 
-      // Token nur bei Bedarf (Schreiben/Löschen) abfragen
       function getToken() {
         let token = localStorage.getItem("gh_lade_token");
         if (!token) {
@@ -236,15 +252,52 @@
 
       function toggleForm() {
         const box = document.getElementById("form-box");
-        box.style.display = box.style.display === "block" ? "none" : "block";
+        const isVisible = box.style.display === "block";
+        if (isVisible) {
+          resetForm();
+          box.style.display = "none";
+        } else {
+          resetForm();
+          box.style.display = "block";
+        }
       }
 
-      // UTF-8 sichere Base64 Helfer
+      function resetForm() {
+        editingId = null;
+        document.getElementById("form-title").textContent =
+          "Neue Säule / Anschluss";
+        document.getElementById("btn-submit").textContent = "Speichern";
+        document.getElementById("inp-name").value = "";
+        document.getElementById("inp-type").value = "DC";
+        document.getElementById("inp-url").value = "";
+        document.getElementById("inp-desc").value = "";
+        document.getElementById("inp-img").value = "";
+      }
+
+      function editSaeule(id) {
+        const item = saeulenData.find((i) => i.id === id);
+        if (!item) return;
+
+        editingId = id;
+        document.getElementById("form-title").textContent =
+          `Bearbeite: ${item.name}`;
+        document.getElementById("btn-submit").textContent =
+          "Änderungen übernehmen";
+        document.getElementById("inp-name").value = item.name;
+        document.getElementById("inp-type").value = item.type;
+        document.getElementById("inp-url").value = item.url;
+        document.getElementById("inp-desc").value = item.desc || "";
+        document.getElementById("inp-img").value = ""; // Datei-Input kann aus Sicherheitsgründen nicht vorbelegt werden
+
+        const box = document.getElementById("form-box");
+        box.style.display = "block";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
       function encodeBase64(str) {
         return btoa(unescape(encodeURIComponent(str)));
       }
 
-      // Bild vor dem Speichern im Browser verkleinern (max. 800px)
       function compressImage(file) {
         return new Promise((resolve) => {
           if (!file) return resolve(null);
@@ -267,7 +320,6 @@
         });
       }
 
-      // 1. LADEN: Ganz normal statisch per fetch (Ohne Token!)
       async function loadData() {
         setStatus("Lade Daten...");
         try {
@@ -284,7 +336,6 @@
         }
       }
 
-      // 2. SPEICHERN: Über die GitHub API (Fragt Token ab und holt aktuellen SHA)
       async function saveToGitHub(commitMsg) {
         const token = getToken();
         if (!token) return alert("Ohne Token kann nicht gespeichert werden.");
@@ -292,7 +343,6 @@
         setStatus("Verbinde mit GitHub...");
 
         try {
-          // Erst SHA der aktuellen saeulen.json vom Server holen (wichtig für den Konfliktschutz)
           const getRes = await fetch(
             `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`,
             {
@@ -308,7 +358,6 @@
 
           setStatus("Speichere Änderungen...");
 
-          // Dann aktualisierte JSON-Datei per PUT hochladen
           const putRes = await fetch(
             `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`,
             {
@@ -328,7 +377,6 @@
           if (!putRes.ok)
             throw new Error("Speichern fehlgeschlagen (" + putRes.status + ")");
 
-          // Daten lokal neu einlesen
           await loadData();
           setStatus("Erfolgreich gespeichert!");
           setTimeout(() => setStatus(""), 2000);
@@ -337,7 +385,7 @@
         }
       }
 
-      async function addSaeule() {
+      async function handleSave() {
         const name = document.getElementById("inp-name").value.trim();
         const type = document.getElementById("inp-type").value;
         const url = document.getElementById("inp-url").value.trim();
@@ -348,23 +396,34 @@
           return alert("Bitte mindestens Name und URL angeben.");
 
         setStatus("Verarbeite Bild...");
-        const imgBase64 = await compressImage(file);
+        const newImgBase64 = await compressImage(file);
 
-        saeulenData.push({
-          id: Date.now(),
-          name,
-          type,
-          url,
-          desc,
-          img: imgBase64,
-        });
-        await saveToGitHub(`Säule hinzugefügt: ${name}`);
+        if (editingId !== null) {
+          // Bestehende Säule aktualisieren
+          const item = saeulenData.find((i) => i.id === editingId);
+          if (item) {
+            item.name = name;
+            item.type = type;
+            item.url = url;
+            item.desc = desc;
+            if (newImgBase64) {
+              item.img = newImgBase64; // Nur überschreiben, wenn ein neues Bild gewählt wurde
+            }
+          }
+          await saveToGitHub(`Säule bearbeitet: ${name}`);
+        } else {
+          // Neue Säule hinzufügen
+          saeulenData.push({
+            id: Date.now(),
+            name,
+            type,
+            url,
+            desc,
+            img: newImgBase64,
+          });
+          await saveToGitHub(`Säule hinzugefügt: ${name}`);
+        }
 
-        // Formular zurücksetzen
-        document.getElementById("inp-name").value = "";
-        document.getElementById("inp-url").value = "";
-        document.getElementById("inp-desc").value = "";
-        document.getElementById("inp-img").value = "";
         toggleForm();
       }
 
@@ -401,7 +460,10 @@
           ${imgHtml}
           ${descHtml}
           <a class="start-link" href="${item.url}" target="_blank">⚡ Ladevorgang starten</a>
-          <button class="btn-del" onclick="deleteSaeule(${item.id})">Eintrag löschen</button>
+          <div class="btn-actions">
+            <button class="btn-edit" onclick="editSaeule(${item.id})">✏️ Bearbeiten</button>
+            <button class="btn-del" onclick="deleteSaeule(${item.id})">🗑️ Löschen</button>
+          </div>
         </details>
       `;
         });
@@ -411,7 +473,6 @@
         document.getElementById("status").textContent = msg;
       }
 
-      // Initial beim Seitenaufruf laden
       loadData();
     </script>
   </body>
