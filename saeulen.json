@@ -5,48 +5,32 @@
       "id": 1794739152445,
       "name": "Vorne rechts",
       "type": "DC",
-      "url": "https://www.google.de",
+      "url": "https://www.m8mit.de/qrpayment?evseid=DE*384*E168391CS0002*2",
       "desc": "Säule näher an Packstation, Kabel vorne rechts - 48 Ct/kWh",
       "group": "Edeka näher an Packstation"
     },
     {
       "id": 1794745539123,
-      "name": "Seitlich links",
+      "name": "Seitlich",
       "type": "AC",
-      "url": "https://www.test.de",
-      "desc": "Säule näher an Packstation, Buchse Seite links - 32 Ct/kWh",
-      "group": "Edeka näher an Packstation"
-    },
-    {
-      "id": 1794745610289,
-      "name": "Seitlich rechts",
-      "type": "AC",
-      "url": "https://www.test.de",
-      "desc": "Säule näher an Packstation, Buchse Seite rechts - 32 Ct/kWh",
+      "url": "https://www.m8mit.de/qrpayment?evseid=DE*384*E168391CS0002*3",
+      "desc": "Säule näher an Packstation, Buchse seitlich - 32 Ct/kWh",
       "group": "Edeka näher an Packstation"
     },
     {
       "id": 1794741905916,
       "name": "Vorne rechts",
       "type": "DC",
-      "url": "https://www.test.de",
+      "url": "https://www.m8mit.de/qrpayment?evseid=DE*384*E168391CS0001*2",
       "desc": "Säule näher an Straße, Kabel vorne - rechts - 48 Ct/kWh",
       "group": "Edeka näher an Straße"
     },
     {
       "id": 1794745630564,
-      "name": "Seitlich links",
+      "name": "Seitlich",
       "type": "AC",
-      "url": "https://www.test.de",
-      "desc": "Säule näher an Straße, Buchse seitlich links - 32 Ct/kWh",
-      "group": "Edeka näher an Straße"
-    },
-    {
-      "id": 1794745646234,
-      "name": "Seitlich rechts",
-      "type": "AC",
-      "url": "https://www.test.de",
-      "desc": "Säule näher an Straße, Buchse seitlich rechts - 32 Ct/kWh",
+      "url": "https://www.m8mit.de/qrpayment?evseid=DE*384*E168391CS0001*3",
+      "desc": "Säule näher an Straße, Buchse seitlich - 32 Ct/kWh",
       "group": "Edeka näher an Straße"
     }
   ]
