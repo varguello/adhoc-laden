@@ -26,9 +26,14 @@ function getToken() {
     token = prompt(
       "Bitte GitHub Personal Access Token eingeben (für Schreibrechte):",
     );
-    if (token) localStorage.setItem("gh_lade_token", token.trim());
+    if (token !== null && token.trim() !== "") {
+      token = token.trim();
+      localStorage.setItem("gh_lade_token", token);
+    } else {
+      return null; // Benutzer hat abgebrochen
+    }
   }
-  return token ? token.trim() : null;
+  return token;
 }
 
 function resetToken() {
@@ -43,13 +48,16 @@ function resetToken() {
   alert("Token aus dem Browser-Speicher gelöscht.");
 }
 
+// 1. NEU: Prüft Token BEVOR das Formular aufgeklappt wird
 function toggleForm() {
   const box = document.getElementById("form-box");
   const isVisible = box.style.display === "block";
+
   if (isVisible) {
-    resetForm();
-    box.style.display = "none";
+    cancelForm();
   } else {
+    if (!getToken()) return; // Abbrechen, wenn kein Token eingegeben wurde
+
     resetForm();
     box.style.display = "block";
   }
@@ -71,7 +79,10 @@ function resetForm() {
   document.getElementById("inp-img").value = "";
 }
 
+// 2. BEARBEITEN: Prüft Token BEVOR das Formular für den Edit geöffnet wird
 function editSaeule(id) {
+  if (!getToken()) return; // Abbrechen, wenn kein Token eingegeben wurde
+
   const item = saeulenData.find((i) => i.id === id);
   if (!item) return;
 
@@ -115,6 +126,7 @@ function compressImage(file) {
   });
 }
 
+// LADEN: Ganz normal statisch per fetch (Ohne Token)
 async function loadData() {
   setStatus("Lade Daten...");
   try {
@@ -129,9 +141,10 @@ async function loadData() {
   }
 }
 
+// SPEICHERN: Mit robuster Authentifizierungs-Prüfung (401/403)
 async function saveToGitHub(commitMsg) {
-  const token = getToken();
-  if (!token) return alert("Ohne Token kann nicht gespeichert werden.");
+  const token = localStorage.getItem("gh_lade_token");
+  if (!token) return;
 
   setStatus("Verbinde mit GitHub...");
 
@@ -142,10 +155,23 @@ async function saveToGitHub(commitMsg) {
         headers: { Authorization: `token ${token}` },
       },
     );
+
+    // Nur bei echten Auth-Fehlern (401 oder 403) wird das Token verworfen
+    if (getRes.status === 401 || getRes.status === 403) {
+      localStorage.removeItem("gh_lade_token");
+      alert(
+        "Das GitHub Token ist ungültig, abgelaufen oder hat keine Schreibrechte (" +
+          getRes.status +
+          "). Es wurde aus dem Speicher entfernt.",
+      );
+      throw new Error("Ungültiges oder abgelaufenes Token");
+    }
+
     if (!getRes.ok)
       throw new Error(
-        "Authentifizierung oder Pfad fehlerhaft (" + getRes.status + ")",
+        "GitHub-Fehler (" + getRes.status + "). Bitte später erneut versuchen.",
       );
+
     const fileMeta = await getRes.json();
     const currentSha = fileMeta.sha;
 
@@ -167,6 +193,16 @@ async function saveToGitHub(commitMsg) {
       },
     );
 
+    if (putRes.status === 401 || putRes.status === 403) {
+      localStorage.removeItem("gh_lade_token");
+      alert(
+        "Das GitHub Token ist ungültig oder abgelaufen (" +
+          putRes.status +
+          "). Es wurde aus dem Speicher entfernt.",
+      );
+      throw new Error("Ungültiges Token");
+    }
+
     if (!putRes.ok)
       throw new Error("Speichern fehlgeschlagen (" + putRes.status + ")");
 
@@ -174,6 +210,7 @@ async function saveToGitHub(commitMsg) {
     setStatus("Erfolgreich gespeichert!");
     setTimeout(() => setStatus(""), 2000);
   } catch (err) {
+    // Netzwerkfehler oder Server-Glitch -> Token bleibt sicher erhalten!
     setStatus("Fehler: " + err.message);
   }
 }
@@ -217,8 +254,11 @@ async function handleSave() {
   toggleForm();
 }
 
+// 3. LÖSCHEN: Prüft Token BEVOR die Sicherheitsabfrage oder Löschung startet
 async function deleteSaeule(id) {
+  if (!getToken()) return; // Abbrechen, wenn kein Token eingegeben wurde
   if (!confirm("Diesen Eintrag wirklich löschen?")) return;
+
   saeulenData = saeulenData.filter((item) => item.id !== id);
   await saveToGitHub("Säule gelöscht");
 }
@@ -233,7 +273,6 @@ function renderList() {
   }
 
   saeulenData.forEach((item) => {
-    // Hier wird jetzt "DC (Schnell)" bzw. "AC (Langsam)" angezeigt
     const badgeText = item.type === "DC" ? "DC (Schnell)" : "AC (Langsam)";
     const badgeClass = item.type === "DC" ? "badge-dc" : "badge-ac";
     const imgHtml = item.img
