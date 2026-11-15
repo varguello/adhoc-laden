@@ -27,6 +27,15 @@
       <label>Standort & Name (z. B. Edeka Säule 1)</label>
       <input type="text" id="inp-name" placeholder="Edeka – Säule 1" />
 
+      <label>Gruppe (vorhandene wählen oder neue eintippen)</label>
+      <input
+        type="text"
+        id="inp-group"
+        list="group-list"
+        placeholder="z. B. Edeka Säule näher an Packstation"
+      />
+      <datalist id="group-list"></datalist>
+
       <label>Anschluss-Typ</label>
       <select id="inp-type">
         <option value="DC">DC Schnelllader (CCS)</option>
@@ -43,8 +52,11 @@
         placeholder="Rechter Stellplatz, Buchse links"
       />
 
-      <label>Foto der Säule (optional / neu)</label>
+      <label>Foto der Säule (optional / neu, überschreibt für diesen Eintrag das Gruppenbild)</label>
       <input type="file" id="inp-img" accept="image/*" />
+
+      <label>Gruppenbild (optional, Standardbild für alle Einträge dieser Gruppe ohne eigenes Foto)</label>
+      <input type="file" id="inp-group-img" accept="image/*" />
 
       <div class="form-actions">
         <button type="button" class="btn-cancel" onclick="cancelForm()">

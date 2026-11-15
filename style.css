@@ -162,6 +162,41 @@ summary::-webkit-details-marker {
     color: #000;
 }
 
+.badge-group {
+    background: #3a3a3c;
+    color: var(--text);
+}
+
+/* Gruppen-Akkordeon (äußere Ebene) */
+details.group {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+details.group > summary {
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+}
+
+.group-items {
+    margin-top: 12px;
+    padding-left: 10px;
+    border-left: 2px solid var(--border);
+}
+
+.group-items details {
+    margin-bottom: 10px;
+}
+
+.group-items details:last-child {
+    margin-bottom: 0;
+}
+
 .saeule-img {
     width: 100%;
     border-radius: 8px;
