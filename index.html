@@ -232,7 +232,7 @@
       // =====================
 
       let saeulenData = [];
-      let editingId = null; // null = neu anlegen, ansonsten ID der zu bearbeitenden Säule
+      let editingId = null;
 
       function getToken() {
         let token = localStorage.getItem("gh_lade_token");
@@ -246,6 +246,13 @@
       }
 
       function resetToken() {
+        if (
+          !confirm(
+            "Möchtest du das gespeicherte GitHub Token wirklich aus dem Browser-Speicher löschen?",
+          )
+        ) {
+          return;
+        }
         localStorage.removeItem("gh_lade_token");
         alert("Token aus dem Browser-Speicher gelöscht.");
       }
@@ -287,7 +294,7 @@
         document.getElementById("inp-type").value = item.type;
         document.getElementById("inp-url").value = item.url;
         document.getElementById("inp-desc").value = item.desc || "";
-        document.getElementById("inp-img").value = ""; // Datei-Input kann aus Sicherheitsgründen nicht vorbelegt werden
+        document.getElementById("inp-img").value = "";
 
         const box = document.getElementById("form-box");
         box.style.display = "block";
@@ -399,7 +406,6 @@
         const newImgBase64 = await compressImage(file);
 
         if (editingId !== null) {
-          // Bestehende Säule aktualisieren
           const item = saeulenData.find((i) => i.id === editingId);
           if (item) {
             item.name = name;
@@ -407,12 +413,11 @@
             item.url = url;
             item.desc = desc;
             if (newImgBase64) {
-              item.img = newImgBase64; // Nur überschreiben, wenn ein neues Bild gewählt wurde
+              item.img = newImgBase64;
             }
           }
           await saveToGitHub(`Säule bearbeitet: ${name}`);
         } else {
-          // Neue Säule hinzufügen
           saeulenData.push({
             id: Date.now(),
             name,
