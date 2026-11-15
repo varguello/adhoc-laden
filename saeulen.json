@@ -3,51 +3,51 @@
   "items": [
     {
       "id": 1794739152445,
-      "name": "Säule näher an Packstation - vorne",
+      "name": "Vorne rechts",
       "type": "DC",
       "url": "https://www.google.de",
       "desc": "Säule näher an Packstation, Kabel vorne rechts - 48 Ct/kWh",
-      "group": "Edeka Säule näher an Packstation"
+      "group": "Edeka näher an Packstation"
     },
     {
       "id": 1794745539123,
-      "name": "Säule näher an Packstation - links",
+      "name": "Seitlich links",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Packstation, Buchse Seite links - 32 Ct/kWh",
-      "group": "Edeka Säule näher an Packstation"
+      "group": "Edeka näher an Packstation"
     },
     {
       "id": 1794745610289,
-      "name": "Säule näher an Packstation - rechts",
+      "name": "Seitlich rechts",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Packstation, Buchse Seite rechts - 32 Ct/kWh",
-      "group": "Edeka Säule näher an Packstation"
+      "group": "Edeka näher an Packstation"
     },
     {
       "id": 1794741905916,
-      "name": "Säule näher an Straße - vorne",
+      "name": "Vorne rechts",
       "type": "DC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Kabel vorne - rechts - 48 Ct/kWh",
-      "group": "Edeka Säule näher an Straße"
+      "group": "Edeka näher an Straße"
     },
     {
       "id": 1794745630564,
-      "name": "Säule näher an Straße - links",
+      "name": "Seitlich links",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Buchse seitlich links - 32 Ct/kWh",
-      "group": "Edeka Säule näher an Straße"
+      "group": "Edeka näher an Straße"
     },
     {
       "id": 1794745646234,
-      "name": "Säule näher an Straße - rechts",
+      "name": "Seitlich rechts",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Buchse seitlich rechts - 32 Ct/kWh",
-      "group": "Edeka Säule näher an Straße"
+      "group": "Edeka näher an Straße"
     }
   ]
 }
