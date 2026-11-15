@@ -1,229 +1,398 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ad-hoc Lade-Manager</title>
-  <style>
-    :root { --bg: #121212; --card: #1e1e1e; --text: #f5f5f7; --accent: #0a84ff; --green: #30d158; --danger: #ff453a; --border: #333; }
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 16px; max-width: 600px; margin-inline: auto; }
-    h1 { font-size: 1.4rem; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-    button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; padding: 12px 16px; transition: opacity 0.2s; }
-    button:active { opacity: 0.7; }
-    .btn-primary { background: var(--accent); color: #fff; width: 100%; }
-    .btn-toggle { background: var(--card); color: var(--accent); border: 1px solid var(--border); padding: 8px 12px; font-size: 0.85rem; }
-    .btn-del { background: transparent; color: var(--danger); font-size: 0.8rem; padding: 6px 10px; border: 1px solid var(--danger); margin-top: 10px; }
-    
-    /* Formular-Box */
-    #form-box { display: none; background: var(--card); padding: 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-    label { display: block; font-size: 0.85rem; margin-top: 12px; margin-bottom: 4px; color: #aaa; }
-    input, select { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #2c2c2e; color: #fff; font-size: 1rem; }
-    
-    /* Säulen-Akkordeon */
-    details { background: var(--card); border-radius: 12px; margin-bottom: 12px; padding: 14px; border: 1px solid var(--border); }
-    summary { font-weight: 700; font-size: 1.05rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-    summary::-webkit-details-marker { display: none; }
-    .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
-    .badge-dc { background: var(--accent); color: #fff; }
-    .badge-ac { background: var(--green); color: #000; }
-    .saeule-img { width: 100%; border-radius: 8px; margin-top: 12px; max-height: 260px; object-fit: cover; }
-    .desc { font-size: 0.9rem; color: #ccc; margin: 10px 0; }
-    .start-link { display: block; text-align: center; background: var(--green); color: #000; text-decoration: none; font-weight: 700; padding: 14px; border-radius: 8px; margin-top: 12px; }
-    #status { font-size: 0.85rem; color: #aaa; text-align: center; margin: 10px 0; }
-  </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ad-hoc Lade-Manager</title>
+    <style>
+      :root {
+        --bg: #121212;
+        --card: #1e1e1e;
+        --text: #f5f5f7;
+        --accent: #0a84ff;
+        --green: #30d158;
+        --danger: #ff453a;
+        --border: #333;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 16px;
+        max-width: 600px;
+        margin-inline: auto;
+      }
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 12px 16px;
+        transition: opacity 0.2s;
+      }
+      button:active {
+        opacity: 0.7;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        width: 100%;
+      }
+      .btn-toggle {
+        background: var(--card);
+        color: var(--accent);
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+      .btn-del {
+        background: transparent;
+        color: var(--danger);
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        border: 1px solid var(--danger);
+        margin-top: 10px;
+      }
 
-  <h1>
-    <span>⚡ Ladesäulen</span>
-    <div>
-      <button class="btn-toggle" onclick="toggleForm()">+ Neu</button>
-      <button class="btn-toggle" onclick="resetToken()" title="Token ändern">🔑</button>
+      /* Formular-Box */
+      #form-box {
+        display: none;
+        background: var(--card);
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        margin-top: 12px;
+        margin-bottom: 4px;
+        color: #aaa;
+      }
+      input,
+      select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #2c2c2e;
+        color: #fff;
+        font-size: 1rem;
+      }
+
+      /* Säulen-Akkordeon */
+      details {
+        background: var(--card);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        padding: 14px;
+        border: 1px solid var(--border);
+      }
+      summary {
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      .badge {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+      .badge-dc {
+        background: var(--accent);
+        color: #fff;
+      }
+      .badge-ac {
+        background: var(--green);
+        color: #000;
+      }
+      .saeule-img {
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 12px;
+        max-height: 260px;
+        object-fit: cover;
+      }
+      .desc {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin: 10px 0;
+      }
+      .start-link {
+        display: block;
+        text-align: center;
+        background: var(--green);
+        color: #000;
+        text-decoration: none;
+        font-weight: 700;
+        padding: 14px;
+        border-radius: 8px;
+        margin-top: 12px;
+      }
+      #status {
+        font-size: 0.85rem;
+        color: #aaa;
+        text-align: center;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <span>⚡ Ladesäulen</span>
+      <div>
+        <button class="btn-toggle" onclick="toggleForm()">+ Neu</button>
+        <button
+          class="btn-toggle"
+          onclick="resetToken()"
+          title="Token zurücksetzen"
+        >
+          🔑
+        </button>
+      </div>
+    </h1>
+
+    <!-- Eingabeformular -->
+    <div id="form-box">
+      <h3 style="margin-top: 0">Neue Säule / Anschluss</h3>
+      <label>Standort & Name (z. B. Edeka Säule 1)</label>
+      <input type="text" id="inp-name" placeholder="Edeka – Säule 1" />
+
+      <label>Anschluss-Typ</label>
+      <select id="inp-type">
+        <option value="DC">DC Schnelllader (CCS)</option>
+        <option value="AC">AC Typ-2 Buchse</option>
+      </select>
+
+      <label>Ad-hoc URL (aus QR-Code)</label>
+      <input type="url" id="inp-url" placeholder="https://..." />
+
+      <label>Kurze Beschreibung / Position</label>
+      <input
+        type="text"
+        id="inp-desc"
+        placeholder="Rechter Stellplatz, Buchse links"
+      />
+
+      <label>Foto der Säule (optional)</label>
+      <input type="file" id="inp-img" accept="image/*" />
+
+      <button
+        class="btn-primary"
+        style="margin-top: 16px"
+        onclick="addSaeule()"
+      >
+        Speichern
+      </button>
     </div>
-  </h1>
 
-  <!-- Eingabeformular -->
-  <div id="form-box">
-    <h3 style="margin-top:0;">Neue Säule / Anschluss</h3>
-    <label>Standort & Name (z. B. Edeka Säule 1)</label>
-    <input type="text" id="inp-name" placeholder="Edeka – Säule 1">
+    <div id="status">Lade Daten...</div>
+    <div id="list"></div>
 
-    <label>Anschluss-Typ</label>
-    <select id="inp-type">
-      <option value="DC">DC Schnelllader (CCS)</option>
-      <option value="AC">AC Typ-2 Buchse</option>
-    </select>
+    <script>
+      // === KONFIGURATION ===
+      const OWNER = "varguello";
+      const REPO = "adhoc-laden";
+      const PATH = "saeulen.json";
+      // =====================
 
-    <label>Ad-hoc URL (aus QR-Code)</label>
-    <input type="url" id="inp-url" placeholder="https://...">
+      let saeulenData = [];
 
-    <label>Kurze Beschreibung / Position</label>
-    <input type="text" id="inp-desc" placeholder="Rechter Stellplatz, Buchse links">
+      // Token nur bei Bedarf (Schreiben/Löschen) abfragen
+      function getToken() {
+        let token = localStorage.getItem("gh_lade_token");
+        if (!token) {
+          token = prompt(
+            "Bitte GitHub Personal Access Token eingeben (für Schreibrechte):",
+          );
+          if (token) localStorage.setItem("gh_lade_token", token.trim());
+        }
+        return token ? token.trim() : null;
+      }
 
-    <label>Foto der Säule (optional)</label>
-    <input type="file" id="inp-img" accept="image/*">
+      function resetToken() {
+        localStorage.removeItem("gh_lade_token");
+        alert("Token aus dem Browser-Speicher gelöscht.");
+      }
 
-    <button class="btn-primary" style="margin-top:16px;" onclick="addSaeule()">Speichern</button>
-  </div>
+      function toggleForm() {
+        const box = document.getElementById("form-box");
+        box.style.display = box.style.display === "block" ? "none" : "block";
+      }
 
-  <div id="status">Lade Daten...</div>
-  <div id="list"></div>
+      // UTF-8 sichere Base64 Helfer
+      function encodeBase64(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+      }
 
-<script>
-  // === KONFIGURATION ===
-  const OWNER = "DEIN_GITHUB_USERNAME";
-  const REPO  = "DEIN_REPO_NAME";
-  const PATH  = "saeulen.json";
-  // =====================
+      // Bild vor dem Speichern im Browser verkleinern (max. 800px)
+      function compressImage(file) {
+        return new Promise((resolve) => {
+          if (!file) return resolve(null);
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              const maxW = 800;
+              const scale = img.width > maxW ? maxW / img.width : 1;
+              canvas.width = img.width * scale;
+              canvas.height = img.height * scale;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              resolve(canvas.toDataURL("image/jpeg", 0.75));
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
 
-  let currentSha = "";
-  let saeulenData = [];
+      // 1. LADEN: Ganz normal statisch per fetch (Ohne Token!)
+      async function loadData() {
+        setStatus("Lade Daten...");
+        try {
+          const res = await fetch(`${PATH}?t=${Date.now()}`);
+          if (!res.ok)
+            throw new Error(
+              "Datei konnte nicht geladen werden (" + res.status + ")",
+            );
+          saeulenData = await res.json();
+          renderList();
+          setStatus("");
+        } catch (err) {
+          setStatus("Fehler beim Laden: " + err.message);
+        }
+      }
 
-  // Token aus LocalStorage holen oder abfragen
-  function getToken() {
-    let token = localStorage.getItem("gh_lade_token");
-    if (!token) {
-      token = prompt("Bitte GitHub Personal Access Token eingeben (wird nur lokal im Browser gespeichert):");
-      if (token) localStorage.setItem("gh_lade_token", token.trim());
-    }
-    return token;
-  }
+      // 2. SPEICHERN: Über die GitHub API (Fragt Token ab und holt aktuellen SHA)
+      async function saveToGitHub(commitMsg) {
+        const token = getToken();
+        if (!token) return alert("Ohne Token kann nicht gespeichert werden.");
 
-  function resetToken() {
-    localStorage.removeItem("gh_lade_token");
-    getToken();
-    loadData();
-  }
+        setStatus("Verbinde mit GitHub...");
 
-  function toggleForm() {
-    const box = document.getElementById("form-box");
-    box.style.display = box.style.display === "block" ? "none" : "block";
-  }
+        try {
+          // Erst SHA der aktuellen saeulen.json vom Server holen (wichtig für den Konfliktschutz)
+          const getRes = await fetch(
+            `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`,
+            {
+              headers: { Authorization: `token ${token}` },
+            },
+          );
+          if (!getRes.ok)
+            throw new Error(
+              "Authentifizierung oder Pfad fehlerhaft (" + getRes.status + ")",
+            );
+          const fileMeta = await getRes.json();
+          const currentSha = fileMeta.sha;
 
-  // UTF-8 sichere Base64 Helfer
-  function encodeBase64(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-  }
-  function decodeBase64(str) {
-    return decodeURIComponent(escape(atob(str)));
-  }
+          setStatus("Speichere Änderungen...");
 
-  // Bild vor dem Speichern im Browser verkleinern (max. 800px)
-  function compressImage(file) {
-    return new Promise((resolve) => {
-      if (!file) return resolve(null);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const maxW = 800;
-          const scale = img.width > maxW ? maxW / img.width : 1;
-          canvas.width = img.width * scale;
-          canvas.height = img.height * scale;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL("image/jpeg", 0.75));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
+          // Dann aktualisierte JSON-Datei per PUT hochladen
+          const putRes = await fetch(
+            `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: `token ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                message: commitMsg,
+                content: encodeBase64(JSON.stringify(saeulenData, null, 2)),
+                sha: currentSha,
+              }),
+            },
+          );
 
-  // Daten von GitHub laden
-  async function loadData() {
-    const token = getToken();
-    if (!token) return;
-    setStatus("Synchronisiere mit GitHub...");
+          if (!putRes.ok)
+            throw new Error("Speichern fehlgeschlagen (" + putRes.status + ")");
 
-    try {
-      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}?t=${Date.now()}`, {
-        headers: { "Authorization": `token ${token}` }
-      });
-      if (!res.ok) throw new Error("Fehler beim Laden (" + res.status + ")");
-      const json = await res.json();
-      currentSha = json.sha;
-      saeulenData = JSON.parse(decodeBase64(json.content));
-      renderList();
-      setStatus("");
-    } catch (err) {
-      setStatus("Fehler: " + err.message);
-    }
-  }
+          // Daten lokal neu einlesen
+          await loadData();
+          setStatus("Erfolgreich gespeichert!");
+          setTimeout(() => setStatus(""), 2000);
+        } catch (err) {
+          setStatus("Fehler: " + err.message);
+        }
+      }
 
-  // Daten auf GitHub speichern
-  async function saveToGitHub(commitMsg) {
-    const token = getToken();
-    setStatus("Speichere auf GitHub...");
+      async function addSaeule() {
+        const name = document.getElementById("inp-name").value.trim();
+        const type = document.getElementById("inp-type").value;
+        const url = document.getElementById("inp-url").value.trim();
+        const desc = document.getElementById("inp-desc").value.trim();
+        const file = document.getElementById("inp-img").files[0];
 
-    try {
-      const res = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: commitMsg,
-          content: encodeBase64(JSON.stringify(saeulenData, null, 2)),
-          sha: currentSha
-        })
-      });
-      if (!res.ok) throw new Error("Speichern fehlgeschlagen (" + res.status + ")");
-      const json = await res.json();
-      currentSha = json.content.sha;
-      renderList();
-      setStatus("Gespeichert!");
-      setTimeout(() => setStatus(""), 2000);
-    } catch (err) {
-      setStatus("Fehler: " + err.message);
-    }
-  }
+        if (!name || !url)
+          return alert("Bitte mindestens Name und URL angeben.");
 
-  async function addSaeule() {
-    const name = document.getElementById("inp-name").value.trim();
-    const type = document.getElementById("inp-type").value;
-    const url  = document.getElementById("inp-url").value.trim();
-    const desc = document.getElementById("inp-desc").value.trim();
-    const file = document.getElementById("inp-img").files[0];
+        setStatus("Verarbeite Bild...");
+        const imgBase64 = await compressImage(file);
 
-    if (!name || !url) return alert("Bitte mindestens Name und URL angeben.");
+        saeulenData.push({
+          id: Date.now(),
+          name,
+          type,
+          url,
+          desc,
+          img: imgBase64,
+        });
+        await saveToGitHub(`Säule hinzugefügt: ${name}`);
 
-    setStatus("Verarbeite Bild...");
-    const imgBase64 = await compressImage(file);
+        // Formular zurücksetzen
+        document.getElementById("inp-name").value = "";
+        document.getElementById("inp-url").value = "";
+        document.getElementById("inp-desc").value = "";
+        document.getElementById("inp-img").value = "";
+        toggleForm();
+      }
 
-    saeulenData.push({ id: Date.now(), name, type, url, desc, img: imgBase64 });
-    await saveToGitHub(`Säule hinzugefügt: ${name}`);
+      async function deleteSaeule(id) {
+        if (!confirm("Diesen Eintrag wirklich löschen?")) return;
+        saeulenData = saeulenData.filter((item) => item.id !== id);
+        await saveToGitHub("Säule gelöscht");
+      }
 
-    // Formular zurücksetzen
-    document.getElementById("inp-name").value = "";
-    document.getElementById("inp-url").value = "";
-    document.getElementById("inp-desc").value = "";
-    document.getElementById("inp-img").value = "";
-    toggleForm();
-  }
+      function renderList() {
+        const container = document.getElementById("list");
+        container.innerHTML = "";
+        if (saeulenData.length === 0) {
+          container.innerHTML =
+            "<p style='text-align:center;color:#777;'>Noch keine Ladesäulen gespeichert.</p>";
+          return;
+        }
 
-  async function deleteSaeule(id) {
-    if (!confirm("Diesen Eintrag wirklich löschen?")) return;
-    saeulenData = saeulenData.filter(item => item.id !== id);
-    await saveToGitHub("Säule gelöscht");
-  }
+        saeulenData.forEach((item) => {
+          const badgeClass = item.type === "DC" ? "badge-dc" : "badge-ac";
+          const imgHtml = item.img
+            ? `<img class="saeule-img" src="${item.img}" alt="${item.name}">`
+            : "";
+          const descHtml = item.desc
+            ? `<div class="desc">${item.desc}</div>`
+            : "";
 
-  function renderList() {
-    const container = document.getElementById("list");
-    container.innerHTML = "";
-    if (saeulenData.length === 0) {
-      container.innerHTML = "<p style='text-align:center;color:#777;'>Noch keine Ladesäulen gespeichert.</p>";
-      return;
-    }
-
-    saeulenData.forEach(item => {
-      const badgeClass = item.type === "DC" ? "badge-dc" : "badge-ac";
-      const imgHtml = item.img ? `<img class="saeule-img" src="${item.img}" alt="${item.name}">` : "";
-      const descHtml = item.desc ? `<div class="desc">${item.desc}</div>` : "";
-
-      container.innerHTML += `
+          container.innerHTML += `
         <details>
           <summary>
             <span>${item.name}</span>
@@ -235,15 +404,15 @@
           <button class="btn-del" onclick="deleteSaeule(${item.id})">Eintrag löschen</button>
         </details>
       `;
-    });
-  }
+        });
+      }
 
-  function setStatus(msg) {
-    document.getElementById("status").textContent = msg;
-  }
+      function setStatus(msg) {
+        document.getElementById("status").textContent = msg;
+      }
 
-  // Initial laden
-  loadData();
-</script>
-</body>
+      // Initial beim Seitenaufruf laden
+      loadData();
+    </script>
+  </body>
 </html>
