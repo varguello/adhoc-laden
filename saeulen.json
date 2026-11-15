@@ -3,7 +3,7 @@
   "items": [
     {
       "id": 1794739152445,
-      "name": "Edeka Säule näher an Packstation - vorne",
+      "name": "Säule näher an Packstation - vorne",
       "type": "DC",
       "url": "https://www.google.de",
       "desc": "Säule näher an Packstation, Kabel vorne rechts - 48 Ct/kWh",
@@ -11,7 +11,7 @@
     },
     {
       "id": 1794745539123,
-      "name": "Edeka Säule näher an Packstation - links",
+      "name": "Säule näher an Packstation - links",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Packstation, Buchse Seite links - 32 Ct/kWh",
@@ -19,7 +19,7 @@
     },
     {
       "id": 1794745610289,
-      "name": "Edeka Säule näher an Packstation - rechts",
+      "name": "Säule näher an Packstation - rechts",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Packstation, Buchse Seite rechts - 32 Ct/kWh",
@@ -27,7 +27,7 @@
     },
     {
       "id": 1794741905916,
-      "name": "Edeka Säule näher an Straße - vorne",
+      "name": "Säule näher an Straße - vorne",
       "type": "DC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Kabel vorne - rechts - 48 Ct/kWh",
@@ -35,7 +35,7 @@
     },
     {
       "id": 1794745630564,
-      "name": "Edeka Säule näher an Straße - links",
+      "name": "Säule näher an Straße - links",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Buchse seitlich links - 32 Ct/kWh",
@@ -43,7 +43,7 @@
     },
     {
       "id": 1794745646234,
-      "name": "Edeka Säule näher an Straße - rechts",
+      "name": "Säule näher an Straße - rechts",
       "type": "AC",
       "url": "https://www.test.de",
       "desc": "Säule näher an Straße, Buchse seitlich rechts - 32 Ct/kWh",
